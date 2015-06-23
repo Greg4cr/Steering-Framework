@@ -38,8 +38,11 @@ In a typical testing scenario that makes use of model-based oracles, a test suit
 These trace files take the form of a header defining each variable, then a set of rows where each row defines the value of the variable for each discrete state capture from the system. Each test is separated by a blank line.
 
 > variable1,variable2,...,variableN
+
 > 1,1,...,17
+
 > 1,2,...,18
+
 > (and so forth)
 
 Each test can either repeat the header or leave it off. The "isOffset" input should be set to true if the header is repeated and false if it is not.
@@ -85,12 +88,17 @@ The configuration file contains the following arguments:
 - metric: Dissimilarity metric to be used for comparisons between the state of the model and the state of the SUT. Currently, the Manhattan and Squared Euclidean metrics are supported.
 - normalization (optional): If the numeric variables should be normalized for comparison, a file containing (on three lines) the variable names, the minimum, and the maximum values should be passed in. For example:
 > variable1,variable2,...,variableN
+
 > 0,0,...,0
+
 > 20,8,...,30
 - tolerances: A file containing the constraints on the steering process. These should be a set of boolean Lustre expressions, one per line. For example:
 > (real(CONFIG_IN_Patient_Bolus_Duration) >= concrete_oracle_CONFIG_IN_Patient_Bolus_Duration -1.0) and (real(CONFIG_IN_Patient_Bolus_Duration) <= (concrete_oracle_CONFIG_IN_Patient_Bolus_Duration + 2.0))
+
 > (OP_CMD_IN_Infusion_Cancel = concrete_oracle_OP_CMD_IN_Infusion_Cancel)
+
 > (real(CONFIG_IN_Configured) = concrete_oracle_CONFIG_IN_Configured)
+
 > Note that the "concrete_oracle_<name>" variables are inserted when steering as constants containing the original version of the variable's value. There is also a corresponding "concrete_sut_<name>" variable. 
 
 ##Dependencies
