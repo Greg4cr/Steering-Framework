@@ -13,9 +13,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
 IN THE SOFTWARE.
+
 -------------------------------------------------
 
-INTRODUCTION
+#INTRODUCTION
 
 The test oracle - a judge of the correctness of the system under test (SUT) - is a major component of the testing process. Specifying test oracles is challenging for some domains, such as real-time embedded systems, where small changes in timing or sensory input may cause large behavioral differences. Models of such systems, often built for analysis and simulation, are appealing for reuse as test oracles. These models, however, typically represent an idealized system, abstracting away certain issues such as non-deterministic timing behavior and sensor noise. Thus, even with the same inputs, the model’s behavior may fail to match an acceptable behavior of the SUT, leading to many false positives reported by the test oracle.
 
@@ -28,22 +29,22 @@ For more background and detailed technical information, see:
 
 The typical disclaimer when dealing with academic code applies - this was written as a proof of concept. Repeat - this is a shaky, early-stage prototype intended to demonstrate the feasibility of the idea. This code is being provided as-is, and includes code specifically written for our two case examples. In practice, you would probably want to take our ideas, look at what this code does, and code your own steering framework from scratch. This code has been released to help do that. That said, we would be happy to help you tranfer the idea of oracle model steering into practice, and encourage you to contact us with questions or to start a collaboration.
 
-RUNNING THE CODE
+#RUNNING THE CODE
 
-<<introduction>>
+##Introduction
 In a typical testing scenario that makes use of model-based oracles, a test suite is executed against both the system under test (SUT) and the behavioral model. The values of the input, output, and select internal variables are recorded to a trace ﬁle at certain intervals, such as after each discrete cycle of input and output. Some comparison mechanism examines those trace ﬁles and issues a verdict for each test case (generally a failure if any discrepancies are detected and a pass if a test executes without revealing any differences between the model and SUT). The steering framework will make its own comparison and issue both an initial pass/fail and a final pass/fail. However, this framework does assume that you have already performed the execution and captures a trace file in the correct format.
 
-<<trace file format>>
+##Trace File Format
 These trace files take the form of a header defining each variable, then a set of rows where each row defines the value of the variable for each discrete state capture from the system. Each test is separated by a blank line.
 
-variable1,variable2,...,variableN
-1,1,...,17
-1,2,...,18
-(and so forth)
+> variable1,variable2,...,variableN
+> 1,1,...,17
+> 1,2,...,18
+> (and so forth)
 
 Each test can either repeat the header or leave it off. The "isOffset" input should be set to true if the header is repeated and false if it is not.
 
-<<steering>>
+##Steering
 
 Steering is an additional step added to attempt to override any failing test verdicts. We assume that you have already collected trace files from the SUT and oracle model. The steering framework will then, for each test in your test suite:
 1. Compare the model output to the SUT output.
@@ -56,7 +57,7 @@ To steer the oracle model, we instrument the model to match the state it was in 
 2. A dissimilarity function—a numerical function that compares a candidate model state to the state of the SUT and delivers a numeric score. We seek the candidate solution that minimizes this function.
 3. A set of additional policies dictating the limits on steering. There are not implemented currently, but an example would be to require an exact match when steering and not allow steering to "close the gap" between the model and the SUT.
 
-<<running the code>>
+##Running the Code
 
 This framework has four classes with Main methods, used for various purposes in the proof-of-concept.
 - SteerModel
@@ -83,23 +84,23 @@ The configuration file contains the following arguments:
 - testsuite: Not all tests contained in the trace need to be compared. The testsuite file is a comma-separated list of all tests to be compared and steered (ex: 2,3,4,6 will execute the second, third, fourth, and sixth tests).
 - metric: Dissimilarity metric to be used for comparisons between the state of the model and the state of the SUT. Currently, the Manhattan and Squared Euclidean metrics are supported.
 - normalization (optional): If the numeric variables should be normalized for comparison, a file containing (on three lines) the variable names, the minimum, and the maximum values should be passed in. For example:
-	variable1,variable2,...,variableN
-	0,0,...,0
-	20,8,...,30
+> variable1,variable2,...,variableN
+> 0,0,...,0
+> 20,8,...,30
 - tolerances: A file containing the constraints on the steering process. These should be a set of boolean Lustre expressions, one per line. For example:
-	(real(CONFIG_IN_Patient_Bolus_Duration) >= concrete_oracle_CONFIG_IN_Patient_Bolus_Duration -1.0) and (real(CONFIG_IN_Patient_Bolus_Duration) <= (concrete_oracle_CONFIG_IN_Patient_Bolus_Duration + 2.0))
-	(OP_CMD_IN_Infusion_Cancel = concrete_oracle_OP_CMD_IN_Infusion_Cancel)
-	(real(CONFIG_IN_Configured) = concrete_oracle_CONFIG_IN_Configured)
-	Note that the "concrete_oracle_<name>" variables are inserted when steering as constants containing the original version of the variable's value. There is also a corresponding "concrete_sut_<name>" variable. 
+> (real(CONFIG_IN_Patient_Bolus_Duration) >= concrete_oracle_CONFIG_IN_Patient_Bolus_Duration -1.0) and (real(CONFIG_IN_Patient_Bolus_Duration) <= (concrete_oracle_CONFIG_IN_Patient_Bolus_Duration + 2.0))
+> (OP_CMD_IN_Infusion_Cancel = concrete_oracle_OP_CMD_IN_Infusion_Cancel)
+> (real(CONFIG_IN_Configured) = concrete_oracle_CONFIG_IN_Configured)
+> Note that the "concrete_oracle_<name>" variables are inserted when steering as constants containing the original version of the variable's value. There is also a corresponding "concrete_sut_<name>" variable. 
 
-<<dependencies>>
+##Dependencies
 
 This steering framework depends on the following JAR files, included in the /lib folder:
 - jKind (https://github.com/agacek/jkind)
 - jKind API (https://github.com/agacek/jkind)
 - Lustre Interpreter (in-house, included)
 
-<<demo>>
+#Demo
 
 A demo is included in the /demo directory. To run it, in a bash environment, enter the directory and execute:
 ./runDemo
