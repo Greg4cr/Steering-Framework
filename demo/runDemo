@@ -1,0 +1,5 @@
+#!/bin/bash
+
+java -jar SteerModel.jar data/config.txt false
+mv log.txt results/
+mv oracle_trace.csv_STEERED_sut_trace.csv_trace.csv results/

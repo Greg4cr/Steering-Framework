@@ -1,0 +1,10 @@
+oracle=data/oracle_trace.csv
+sut=data/sut_trace.csv
+model=data/INFUSION_MGR_Functional_R2012_ordered.kind.lus
+ods=data/oracleVariables.csv
+ids=data/inputVariables.csv
+testsuite=data/suite.csv
+tolerances=data/tolerances.txt
+metric=manhattan
+normalization=
+varlist=data/allVariables.csv

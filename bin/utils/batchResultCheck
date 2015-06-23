@@ -1,0 +1,87 @@
+# $1 = Config file directory
+# $2 = Mutant trace directory
+# $3 = Steered trace directory
+
+sysModels=`ls $2 | grep "_system_trace.csv"`
+oModels=`ls $2 | grep "__trace.csv"`
+
+# MANHATTAN
+
+cat $1"/confighead.txt" > $1"/thisConfig.txt"
+echo "metric=manhattan" >> $1"/thisConfig.txt"
+
+	# SYSTEM MUTANTS
+
+echo "rut="$1"/pacing_STEERING_MODEL_2012_ints_inlined.kind.lus_SYSTEM_trace.csv" >> $1"/thisConfig.txt"
+cat $1"/thisConfig.txt"
+for m in $sysModels; do
+	echo "sut="$2"/"$m >> $1"/thisConfig.txt"
+	echo "steered="$3"/pacing_STEERING_MODEL_2012_ints_inlined.kind.lus_trace.csv_STEERED_"$m"_MANHATTAN_trace.csv" >> $1"/thisConfig.txt"
+
+	# call result checker
+	java -jar ResultChecker.jar 7814/thisConfig.txt true results_manhattan.txt
+	mv results.txt results_manhattan.txt
+
+	head -n -2 $1"/thisConfig.txt" > temp 
+	mv temp $1"/thisConfig.txt"
+done
+
+	# ORIGINAL MUTANTS
+
+head -n -1 $1"/thisConfig.txt" > temp 
+mv temp $1"/thisConfig.txt"
+echo "rut="$1"/pacing_STEERING_MODEL_2012_ints_inlined.kind.lus_trace.csv" >> $1"/thisConfig.txt"
+cat $1"/thisConfig.txt"
+for m in $oModels; do
+	echo "sut="$2"/"$m >> $1"/thisConfig.txt"
+	echo "steered="$3"/pacing_STEERING_MODEL_2012_ints_inlined.kind.lus_trace.csv_STEERED_"$m"_MANHATTAN_trace.csv" >> $1"/thisConfig.txt"
+
+	# call result checker
+	java -jar ResultChecker.jar 7814/thisConfig.txt true results_manhattan.txt
+	mv results.txt results_manhattan.txt
+
+	head -n -2 $1"/thisConfig.txt" > temp 
+	mv temp $1"/thisConfig.txt"	
+done
+
+#SQ EUCLID
+
+rm $1"/thisConfig.txt"
+cat $1"/confighead.txt" > $1"/thisConfig.txt"
+echo "metric=sqeuclid" >> $1"/thisConfig.txt"
+
+	# SYSTEM MUTANTS
+
+echo "rut="$1"/pacing_STEERING_MODEL_2012_ints_inlined.kind.lus_SYSTEM_trace.csv" >> $1"/thisConfig.txt"
+cat $1"/thisConfig.txt"
+for m in $sysModels; do
+	echo "sut="$2"/"$m >> $1"/thisConfig.txt"
+	echo "steered="$3"/pacing_STEERING_MODEL_2012_ints_inlined.kind.lus_trace.csv_STEERED_"$m"_MANHATTAN_trace.csv" >> $1"/thisConfig.txt"
+
+	# call result checker
+	java -jar ResultChecker.jar 7814/thisConfig.txt true results_sqeuclid.txt
+	mv results.txt results_sqeuclid.txt
+
+	head -n -2 $1"/thisConfig.txt" > temp 
+	mv temp $1"/thisConfig.txt"
+done
+
+	# ORIGINAL MUTANTS
+
+head -n -1 $1"/thisConfig.txt" > temp 
+mv temp $1"/thisConfig.txt"
+echo "rut="$1"/pacing_STEERING_MODEL_2012_ints_inlined.kind.lus_trace.csv" >> $1"/thisConfig.txt"
+cat $1"/thisConfig.txt"
+for m in $oModels; do
+	echo "sut="$2"/"$m >> $1"/thisConfig.txt"
+	echo "steered="$3"/pacing_STEERING_MODEL_2012_ints_inlined.kind.lus_trace.csv_STEERED_"$m"_MANHATTAN_trace.csv" >> $1"/thisConfig.txt"
+
+	# call result checker
+	java -jar ResultChecker.jar 7814/thisConfig.txt true results_sqeuclid.txt
+	mv results.txt results_sqeuclid.txt
+
+	head -n -2 $1"/thisConfig.txt" > temp 
+	mv temp $1"/thisConfig.txt"	
+done
+
+rm $1"/thisConfig.txt"
