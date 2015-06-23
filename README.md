@@ -87,12 +87,15 @@ The configuration file contains the following arguments:
 - testsuite: Not all tests contained in the trace need to be compared. The testsuite file is a comma-separated list of all tests to be compared and steered (ex: 2,3,4,6 will execute the second, third, fourth, and sixth tests).
 - metric: Dissimilarity metric to be used for comparisons between the state of the model and the state of the SUT. Currently, the Manhattan and Squared Euclidean metrics are supported.
 - normalization (optional): If the numeric variables should be normalized for comparison, a file containing (on three lines) the variable names, the minimum, and the maximum values should be passed in. For example:
+
 > variable1,variable2,...,variableN
 
 > 0,0,...,0
 
 > 20,8,...,30
+
 - tolerances: A file containing the constraints on the steering process. These should be a set of boolean Lustre expressions, one per line. For example:
+
 > (real(CONFIG_IN_Patient_Bolus_Duration) >= concrete_oracle_CONFIG_IN_Patient_Bolus_Duration -1.0) and (real(CONFIG_IN_Patient_Bolus_Duration) <= (concrete_oracle_CONFIG_IN_Patient_Bolus_Duration + 2.0))
 
 > (OP_CMD_IN_Infusion_Cancel = concrete_oracle_OP_CMD_IN_Infusion_Cancel)
